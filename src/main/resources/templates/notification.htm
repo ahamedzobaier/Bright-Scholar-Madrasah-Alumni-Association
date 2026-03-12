@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/Notification.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>Notifications | BSMAA</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="noti-container">
+        <h2>Recent Notifications</h2>
+
+        <div class="noti-list">
+            <div class="noti-item unread">
+                <div class="noti-icon">🔔</div>
+                <div class="noti-text">
+                    <strong>New Event:</strong> "Annual Iftar Mahfil 2026" has been added to the calendar.
+                    <span class="time">2 hours ago</span>
+                </div>
+            </div>
+
+            <div class="noti-item">
+                <div class="noti-icon">📢</div>
+                <div class="noti-text">
+                    <strong>System Update:</strong> Your profile account type has been updated to Committee Member.
+                    <span class="time">1 day ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

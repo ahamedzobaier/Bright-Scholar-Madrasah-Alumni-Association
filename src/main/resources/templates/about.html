@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/About.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>About Us | BSMAA</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <main class="about-container">
+        <section class="about-hero">
+            <h1 style="color: #007377;">About Bright Scholar Madrasah</h1>
+            <p class="subtitle">Nurturing Knowledge and Faith Since [Year]</p>
+        </section>
+
+        <section class="about-content">
+            <div class="text-block">
+                <h2>Our History</h2>
+                <p>Bright Scholar Madrasah has been a beacon of Islamic and academic excellence...</p>
+            </div>
+
+            <div class="goal-box">
+                <h2>Our Goal</h2>
+                <p>To create a global network of alumni who contribute positively to society while upholding the values
+                    of our Madrasah.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

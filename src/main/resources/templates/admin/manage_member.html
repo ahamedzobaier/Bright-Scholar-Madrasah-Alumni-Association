@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/AdminStyle.css}">
+    <title>Manage Members | BSMAA</title>
+</head>
+
+<body>
+    <div class="admin-wrapper">
+        <div th:replace="~{admin/fragments :: sidebar}"></div>
+
+        <main class="content">
+            <div class="header-flex">
+                <h2>Alumni Member Directory</h2>
+                <p>Total Registered: <span th:text="${members.size()}">0</span></p>
+            </div>
+
+            <div th:if="${param.deleted}" class="alert alert-success">
+                ✅ Member has been successfully removed.
+            </div>
+
+            <div th:if="${param.error == 'self_delete'}" class="alert alert-danger">
+                ⚠️ You cannot delete your own admin account!
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${members}">
+                        <td th:text="${user.userId}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span th:if="${user.accountType != null}"
+                                th:classappend="${user.accountType.toString() == 'ADMIN' ? 'badge-admin' : 'badge-user'}" class="badge"
+                                th:text="${user.accountType}">
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/members/edit/{id}(id=${user.userId})}" class="btn-edit">Edit</a>
+                            <a th:href="@{/admin/members/delete/{id}(id=${user.userId})}" class="btn-delete"
+                                onclick="return confirm('Delete this member?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+
+</html>

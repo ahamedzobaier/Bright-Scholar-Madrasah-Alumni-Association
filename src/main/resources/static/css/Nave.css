@@ -1,0 +1,33 @@
+.main-nav {
+    background-color: #007377;
+    /* Primary Teal from Logo */
+    padding: 1rem 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #C1A36E;
+    /* Heritage Gold Accent */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #C1A36E;
+    /* Hover Gold */
+}
+
+.nav-logo {
+    height: 50px;
+}

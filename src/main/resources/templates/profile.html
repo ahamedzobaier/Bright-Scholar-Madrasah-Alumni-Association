@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/Profile.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>My Profile | BSMAA</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="profile-wrapper">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img th:src="${user.profilePicUrl}" alt="Profile Picture" class="profile-img">
+                <h2 th:text="${user.username}">Username</h2>
+                <span class="badge" th:text="${user.accountType}">ACCOUNT TYPE</span>
+            </div>
+
+            <div class="profile-details">
+                <div class="detail-row">
+                    <label>User ID:</label>
+                    <span th:text="${user.userId}">#123</span>
+                </div>
+                <div class="detail-row">
+                    <label>Email Address:</label>
+                    <span th:text="${user.email}">email@example.com</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="edit-btn">Edit Profile</button>
+                <button class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

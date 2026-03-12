@@ -1,0 +1,28 @@
+<nav th:fragment="navbar" class="main-nav">
+    <div class="nav-container">
+        <div class="logo-section">
+            <a href="/">
+                <img th:src="@{/images/logo.jpg}" alt="BSMAA Logo" style="height: 40px; vertical-align: middle;">
+            </a>
+            <span class="brand-name">BSM Alumni</span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+
+            <li th:if="${session.loggedInUser != null}">
+                <a th:href="@{/profile}" th:text="${session.loggedInUser.username}">Profile</a>
+            </li>
+            <li th:if="${session.loggedInUser != null}">
+                <a th:href="@{/logout}">Logout</a>
+            </li>
+
+            <li th:if="${session.loggedInUser == null}">
+                <a th:href="@{/login}">Login</a>
+            </li>
+
+            <li><a th:href="@{/notifications}">🔔</a></li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/Achivement.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>Achievements | BSMAA</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <div class="section-container">
+        <h1 class="page-title">Alumni & Institutional Achievements</h1>
+
+        <div class="achievement-grid">
+            <div class="achievement-card">
+                <div class="badge-icon">🏆</div>
+                <img src="/images/achieve-1.jpg" alt="Achievement Pic" class="achieve-img">
+                <h3>Top University Placements</h3>
+                <p>Over 50 alumni secured positions in top-tier international universities this year.</p>
+            </div>
+
+            <div class="achievement-card">
+                <div class="badge-icon">📜</div>
+                <img src="/images/achieve-2.jpg" alt="Achievement Pic" class="achieve-img">
+                <h3>Community Leadership Award</h3>
+                <p>Recognizing the social work performed by our 2020 batch in rural education.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

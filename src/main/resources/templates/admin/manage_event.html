@@ -1,0 +1,28 @@
+<main class="content">
+    <div class="form-container">
+        <h2>Create New Alumni Event</h2>
+        <form th:action="@{/admin/events/save}" th:object="${event}" method="post">
+            <div class="input-group">
+                <label>Event Title</label>
+                <input type="text" th:field="*{title}" required placeholder="e.g. Annual Grand Reunion 2026">
+            </div>
+
+            <div class="input-group">
+                <label>Date & Time</label>
+                <input type="datetime-local" th:field="*{eventDate}" required>
+            </div>
+
+            <div class="input-group">
+                <label>Location</label>
+                <input type="text" th:field="*{location}" placeholder="e.g. University Auditorium">
+            </div>
+
+            <div class="input-group">
+                <label>Description</label>
+                <textarea th:field="*{description}" rows="5"></textarea>
+            </div>
+
+            <button type="submit" class="admin-btn">Publish Event</button>
+        </form>
+    </div>
+</main>

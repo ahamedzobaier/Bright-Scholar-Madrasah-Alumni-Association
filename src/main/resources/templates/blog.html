@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/Blog-Post.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <title>Alumni Blog | BSMAA</title>
+</head>
+
+<body>
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <main class="section-container">
+        <h1 class="page-title" style="color: var(--primary-teal);">Alumni Stories & News</h1>
+
+        <div class="blog-grid">
+            <article class="blog-card" th:each="i : ${#numbers.sequence(1, 8)}">
+                <div class="blog-img-container">
+                    <img src="/images/blog-placeholder.jpg" alt="Blog Image">
+                </div>
+                <div class="blog-content">
+                    <span class="date">March 12, 2026</span>
+                    <h3>The Journey of a Scholar</h3>
+                    <p>Sharing insights from the latest alumni gathering held at the Madrasah...</p>
+                    <a href="#" class="read-more">Read Full Post →</a>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+
+</html>

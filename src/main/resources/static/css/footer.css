@@ -1,0 +1,15 @@
+footer {
+    background-color: #c1a36e;
+    /* Navy Blue from BSM Text */
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 50px;
+}
+
+.footer-goal {
+    border-top: 1px solid #C1A36E;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-style: italic;
+}

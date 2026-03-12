@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/AdminStyle.css}">
+</head>
+
+<body>
+    <div style="display: flex;">
+        <nav style="width: 200px; background: #002147; height: 100vh; color: white; padding: 20px;">
+            <h3>BSMAA Admin</h3>
+            <ul>
+                <li><a th:href="@{/admin/dashboard}" style="color: white;">Dashboard</a></li>
+                <li><a th:href="@{/admin/members}" style="color: white;">Members</a></li>
+                <li><a th:href="@{/admin/events/new}" style="color: white;">Add Event</a></li>
+                <li><a th:href="@{/admin/logout}" style="color: #ff4d4d;">Logout</a></li>
+            </ul>
+        </nav>
+
+        <main style="padding: 40px; flex: 1;">
+            <h1>Welcome, <span th:text="${session.loggedInAdmin.fullName}">Admin</span>!</h1>
+
+            <div style="display: flex; gap: 20px;">
+                <div style="background: #eee; padding: 20px; border-radius: 10px;">
+                    <h3>Total Members</h3>
+                    <p style="font-size: 2rem;" th:text="${totalMembers}">0</p>
+                </div>
+                <div style="background: #eee; padding: 20px; border-radius: 10px;">
+                    <h3>Total Events</h3>
+                    <p style="font-size: 2rem;" th:text="${totalEvents}">0</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

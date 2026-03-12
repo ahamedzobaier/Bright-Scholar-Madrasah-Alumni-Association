@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BSMAA | Home</title>
+    <link rel="stylesheet" th:href="@{/css/Nave.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        /* General Layout for Sections from your wireframe */
+        .section-container {
+            padding: 40px 10%
+        }
+
+        .recent-events {
+            background: #f9f9f9
+        }
+
+        .achievements {
+            background: #fff;
+            border-left: 5px solid #C1A36E
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .blog-item {
+            border: 1px solid #ddd;
+            height: 150px;
+            background: #eee
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/header :: navbar}"></div>
+
+    <section class="section-container recent-events">
+        <h2 style="color: #007377;">Recent Events</h2>
+        <div class="events-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+
+            <div class="event-card" th:each="event : ${events}"
+                style="padding: 15px; border: 1px solid #ddd; background: #fff;">
+                <h3 th:text="${event.name}">Event Name</h3>
+                <p th:text="${event.description}">Description...</p>
+                <small th:text="${event.date}">Date</small>
+            </div>
+
+            <div th:if="${#lists.isEmpty(events)}">
+                <p>No events found. Please check back later!</p>
+            </div>
+        </div>
+    </section>
+    <section class="section-container achievements">
+        <h2 style="color: #000080;">Achievements</h2>
+        <p>Highlighting the success of Bright Scholar Madrasah.</p>
+    </section>
+
+    <section class="section-container">
+        <h2>Blog Posts</h2>
+        <div class="blog-grid">
+            <div class="blog-item" th:each="i : ${#numbers.sequence(1, 8)}"></div>
+        </div>
+    </section>
+
+    <section class="section-container" style="background-color: #007377; color: white;">
+        <h2>Our Goal</h2>
+        <p>Building a strong network of scholars and leaders.</p>
+    </section>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
+
+</html>
