@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BSM Alumni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+Pro:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bg-pattern {
+            background-color: #1e3a5f;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+
+<body class="bg-pattern min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-4xl w-full flex flex-col md:flex-row shadow-2xl rounded-2xl overflow-hidden">
+
+        <div class="md:w-1/2 bg-slate-900 p-12 text-white flex flex-col justify-center relative overflow-hidden">
+            <div class="relative z-10">
+                <div class="w-16 h-16 bg-amber-500 rounded-xl flex items-center justify-center mb-6 shadow-lg">
+                    <span class="text-slate-900 font-bold text-2xl font-serif">BSM</span>
+                </div>
+                <h1 class="text-4xl font-serif font-bold mb-4">Welcome Back!</h1>
+                <p class="text-slate-400 leading-relaxed mb-8">Reconnect with your alma mater, stay updated with events,
+                    and network with fellow Bright Scholars.</p>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 text-sm text-slate-300">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-amber-500"></i>
+                        <span>Exclusive Alumni Events</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-slate-300">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-amber-500"></i>
+                        <span>Networking Opportunities</span>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="md:w-1/2 glass p-12 flex flex-col justify-center">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Member Login</h2>
+            <p class="text-slate-500 text-sm mb-8">Enter your credentials to access your account.</p>
+
+            <div th:if="${error}"
+                class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                <span th:text="${error}">Invalid credentials</span>
+            </div>
+
+            <form th:action="@{/login}" method="post" class="space-y-5">
+                <div>
+                    <label
+                        class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Username</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-3 top-3 w-5 h-5 text-slate-400"></i>
+                        <input type="text" name="username" required
+                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all"
+                            placeholder="your_username">
+                    </div>
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-3 top-3 w-5 h-5 text-slate-400"></i>
+                        <input type="password" name="password" required
+                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-all"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
+                        <input type="checkbox" class="rounded border-slate-300 text-amber-500 focus:ring-amber-500">
+                        Remember me
+                    </label>
+                    <a href="#" class="text-amber-600 font-semibold hover:text-amber-700">Forgot password?</a>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg shadow-lg transition-all transform hover:-translate-y-1">
+                    Login Now
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-slate-100 text-center">
+                <p class="text-slate-600 text-sm">
+                    Don't have an account?
+                    <a th:href="@{/signup}" class="text-amber-600 font-bold">Apply for Membership</a>>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

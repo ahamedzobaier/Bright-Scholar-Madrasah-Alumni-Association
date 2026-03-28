@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/fragments/layout :: main-layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Events - BSM Alumni</title>
+</head>
+
+<body>
+    <section class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-12 border-b border-slate-200 pb-8">
+            <h1 class="text-4xl font-bold text-[#1e3a5f] font-serif">Upcoming Events</h1>
+            <p class="text-slate-500 mt-2 text-lg">Don't miss out on our next alumni gathering and networking sessions.
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+            <div th:if="${events == null or #lists.isEmpty(events)}"
+                class="col-span-full py-20 text-center bg-white rounded-2xl border-2 border-dashed border-slate-200">
+                <i data-lucide="calendar-off" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
+                <p class="text-slate-500 font-medium">No upcoming events scheduled at the moment.</p>
+            </div>
+
+            <div th:each="event : ${events}"
+                class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group">
+
+                <div class="h-48 bg-slate-200 relative overflow-hidden">
+                    <img th:if="${event.imageUrl != null}" th:src="${event.imageUrl}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        alt="Event Image">
+
+                    <div th:unless="${event.imageUrl != null}"
+                        class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1e3a5f] to-slate-700">
+                        <i data-lucide="image" class="w-12 h-12 text-white/20"></i>
+                    </div>
+
+                    <div class="absolute top-4 left-4 bg-white rounded-xl p-2 shadow-lg text-center min-w-[60px]">
+                        <span class="block text-xl font-bold text-[#1e3a5f] leading-none"
+                            th:text="${#temporals.format(event.eventDate, 'dd')}">15</span>
+                        <span class="block text-[10px] uppercase font-bold text-amber-600 tracking-wider"
+                            th:text="${#temporals.format(event.eventDate, 'MMM')}">MAR</span>
+                    </div>
+                </div>
+
+                <div class="p-6">
+                    <div class="flex items-center gap-2 text-amber-600 mb-3">
+                        <i data-lucide="tag" class="w-3 h-3"></i>
+                        <span class="text-[10px] font-bold uppercase tracking-widest"
+                            th:text="${event.status}">UPCOMING</span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#1e3a5f] transition-colors"
+                        th:text="${event.title}">Event Title</h3>
+
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center gap-2 text-slate-500 text-sm">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i>
+                            <span th:text="${event.location}">Location</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-500 text-sm">
+                            <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                            <span th:text="${#temporals.format(event.eventDate, 'hh:mm a')}">Time</span>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-600 text-sm line-clamp-3 mb-6 leading-relaxed" th:text="${event.description}">
+                        Event description goes here.
+                    </p>
+
+                    <a th:href="@{/event/view/{id}(id=${event.id})}"
+                        class="block w-full text-center py-3 bg-slate-50 hover:bg-[#1e3a5f] hover:text-white text-[#1e3a5f] font-bold rounded-xl transition-all border border-slate-100">
+                        View Details
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/fragments/layout :: main-layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Committee - BSM Alumni</title>
+</head>
+
+<body>
+    <section class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-[#1e3a5f] font-serif mb-4">Executive Committee</h2>
+            <p class="text-slate-500 max-w-2xl mx-auto text-lg">
+                Meet the dedicated leaders working to strengthen the bond between our alumni and the alma mater.
+            </p>
+            <div class="w-24 h-1 bg-amber-500 mx-auto mt-6"></div>
+        </div>
+
+        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+            <div th:each="member : ${committeeMembers}"
+                class="group bg-white rounded-3xl p-6 text-center border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+
+                <div
+                    class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#1e3a5f] to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                </div>
+
+                <div class="relative inline-block mb-6">
+                    <div
+                        class="w-32 h-32 rounded-2xl overflow-hidden mx-auto border-4 border-slate-50 shadow-inner group-hover:border-amber-50 transition-colors">
+                        <img th:if="${member.profilePicUrl != null}" th:src="${member.profilePicUrl}"
+                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                            alt="Committee Member">
+                        <div th:unless="${member.profilePicUrl != null}"
+                            class="w-full h-full bg-slate-100 flex items-center justify-center">
+                            <i data-lucide="user" class="w-12 h-12 text-slate-300"></i>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#1e3a5f] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg whitespace-nowrap uppercase tracking-widest"
+                        th:text="${member.accountType}">
+                        President
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-xl font-bold text-slate-900 group-hover:text-[#1e3a5f] transition-colors"
+                        th:text="${member.username}">Name</h3>
+
+                    <div
+                        class="flex items-center justify-center gap-2 text-amber-600 font-bold text-xs uppercase tracking-tighter">
+                        <i data-lucide="graduation-cap" class="w-3 h-3"></i>
+                        <span th:text="'Batch of ' + ${member.batch}">Batch: 2015</span>
+                    </div>
+
+                    <p class="text-slate-500 text-sm mt-4 leading-relaxed line-clamp-2 italic"
+                        th:text="${member.department}">Department Name</p>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-slate-50 flex justify-center gap-4">
+                    <a href="#"
+                        class="p-2 text-slate-400 hover:text-[#1e3a5f] hover:bg-slate-50 rounded-lg transition-all">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#"
+                        class="p-2 text-slate-400 hover:text-[#1e3a5f] hover:bg-slate-50 rounded-lg transition-all">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="mt-20 bg-[#1e3a5f] rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden shadow-2xl">
+            <div class="relative z-10">
+                <h3 class="text-2xl md:text-3xl font-bold mb-4">Want to contribute?</h3>
+                <p class="text-blue-100 mb-8 max-w-xl mx-auto">We are always looking for passionate alumni to join our
+                    sub-committees and volunteer for upcoming events.</p>
+                <a th:href="@{/about}"
+                    class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-8 py-3 rounded-xl transition-all shadow-lg">
+                    Contact Us <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+            <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-white/5 rounded-full"></div>
+        </div>
+    </section>
+</body>
+
+</html>

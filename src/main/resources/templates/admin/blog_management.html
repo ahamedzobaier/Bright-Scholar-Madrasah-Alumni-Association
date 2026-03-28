@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Members - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body class="bg-slate-50">
+    <div th:replace="~{admin/fragments :: sidebar('members')}"></div>
+
+    <div class="lg:ml-64 min-h-screen">
+        <div th:replace="~{admin/fragments :: navbar}"></div>
+
+        <main class="p-6">
+            <h1 class="text-2xl font-bold text-slate-800 mb-8">Manage Members</h1>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase">
+                        <tr>
+                            <th class="p-4">Name/Email</th>
+                            <th class="p-4">Batch</th>
+                            <th class="p-4">Department</th>
+                            <th class="p-4">Status</th>
+                            <th class="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr th:each="user : ${users}" class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900" th:text="${user.username}">Username</div>
+                                <div class="text-xs text-slate-500" th:text="${user.email}">email@example.com</div>
+                            </td>
+                            <td class="p-4 text-slate-600" th:text="${user.batch}">2020</td>
+                            <td class="p-4 text-slate-600" th:text="${user.department}">CSE</td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold"
+                                    th:classappend="${user.status == 'APPROVED' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}"
+                                    th:text="${user.status}">PENDING</span>
+                            </td>
+                            <td class="p-4 text-right space-x-2">
+                                <a th:href="@{/admin/members/edit/{id}(id=${user.id})}"
+                                    class="inline-flex p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                </a>
+                                <form th:action="@{/admin/approve}" method="post" class="inline"
+                                    th:if="${user.status == 'PENDING'}">
+                                    <input type="hidden" name="userId" th:value="${user.id}">
+                                    <button type="submit" class="p-2 text-green-600 hover:bg-green-50 rounded-lg"><i
+                                            data-lucide="check-circle" class="w-4 h-4"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <div th:replace="~{admin/admin_footer :: admin-footer}"></div>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

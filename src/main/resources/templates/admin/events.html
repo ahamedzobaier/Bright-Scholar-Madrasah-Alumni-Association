@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Events</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-slate-50">
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-slate-900 text-white p-6 hidden md:block">
+            <h2 class="text-xl font-bold mb-8 text-amber-500">BSM Admin</h2>
+            <nav class="space-y-4">
+                <a href="#" class="block text-slate-400 hover:text-white">Dashboard</a>
+                <a th:href="@{/admin/events}" class="block text-white font-bold">Manage Events</a>
+                <a href="/home" class="block text-slate-400 hover:text-white border-t border-slate-800 pt-4">Exit to
+                    Site</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Event Management</h1>
+                    <p class="text-slate-500">Manage all alumni gatherings and workshops</p>
+                </div>
+                <button
+                    class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Create New Event
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Title</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr th:each="event : ${events}" class="hover:bg-slate-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-slate-800" th:text="${event.title}">Event Title</div>
+                                <div class="text-xs text-slate-400 truncate w-48" th:text="${event.description}">Desc
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-600">
+                                <span th:text="${#temporals.format(event.eventDate, 'dd MMM yyyy')}">Date</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-600" th:text="${event.location}">Location</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase"
+                                    th:classappend="${event.status == 'UPCOMING' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}"
+                                    th:text="${event.status}">Status</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <a href="#" class="p-2 text-slate-400 hover:text-amber-600" title="Edit">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </a>
+                                    <a href="#" class="p-2 text-slate-400 hover:text-red-600" title="Delete">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

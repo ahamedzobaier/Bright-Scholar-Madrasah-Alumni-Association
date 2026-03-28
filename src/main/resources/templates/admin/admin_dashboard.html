@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | BSM Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar/Content Animation */
+        #admin-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.sidebar-visible #admin-sidebar {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 1024px) {
+            #main-content {
+                transition: margin-left 0.3s ease-in-out;
+            }
+
+            body.sidebar-visible #main-content {
+                margin-left: 288px;
+            }
+        }
+
+        /* Smooth scroll for table */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+
+    <div th:replace="~{admin/fragments :: navbar}"></div>
+    <div th:replace="~{admin/fragments :: sidebar('dashboard')}"></div>
+
+    <div id="main-content" class="min-h-screen flex flex-col">
+        <main class="p-4 md:p-8 space-y-8 flex-grow">
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+                    <p class="text-slate-500 text-sm">Manage your alumni network and pending requests.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a th:href="@{/admin/events/new}"
+                        class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-amber-500 hover:text-slate-900 transition-all shadow-sm">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Create New Event
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="calendar"></i>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Upcoming Events</h3>
+                    <p class="text-2xl font-bold text-slate-900 mt-1">08</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="user-plus"></i>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Pending Approvals</h3>
+                    <p class="text-2xl font-bold text-slate-900 mt-1" th:text="${users != null ? users.size() : '0'}">0
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active Members</h3>
+                    <p class="text-2xl font-bold text-slate-900 mt-1">1,240</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div
+                        class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="bar-chart-3"></i>
+                    </div>
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Engagement Rate</h3>
+                    <p class="text-2xl font-bold text-slate-900 mt-1">82%</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky left-0">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="clock" class="w-5 h-5 text-amber-500"></i>
+                        <h3 class="font-bold text-slate-800">Pending Approvals</h3>
+                    </div>
+                    <a th:href="@{/admin/members}"
+                        class="text-sm font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                        View All <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">User Details</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Batch</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr th:each="user : ${users}" class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-[#1e3a5f] text-white flex items-center justify-center font-bold text-sm shadow-inner">
+                                            <span
+                                                th:text="${#strings.substring(user.username,0,1).toUpperCase()}">U</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-900 leading-tight"
+                                                th:text="${user.username}">Username</div>
+                                            <div class="text-xs text-slate-500" th:text="${user.email}">
+                                                email@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-slate-600" th:text="${user.batch}">2021
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-amber-100 text-amber-700 border border-amber-200">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <form th:action="@{/admin/users/approve}" method="post">
+                                            <input type="hidden" name="userId" th:value="${user.userId}">
+                                            <button type="submit"
+                                                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition-all">
+                                                Approve
+                                            </button>
+                                        </form>
+                                        <form th:action="@{/admin/users/reject}" method="post">
+                                            <input type="hidden" name="userId" th:value="${user.userId}">
+                                            <button type="submit"
+                                                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                                Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${users == null or users.empty}">
+                                <td colspan="4" class="px-6 py-20 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <i data-lucide="inbox" class="w-12 h-12 text-slate-200"></i>
+                                        <p class="text-slate-400 font-medium">No pending registration requests.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-6 text-center text-slate-400 text-xs border-t border-slate-200 bg-white">
+            © 2026 BSM Alumni Association • Developed with ❤️ for the Community
+        </footer>
+    </div>
+
+    <div th:if="${message}" id="toast"
+        class="fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] flex items-center gap-3 animate-bounce">
+        <i data-lucide="info" class="w-5 h-5 text-amber-400"></i>
+        <span class="text-sm font-bold" th:text="${message}">Action Successful!</span>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-visible');
+        }
+
+        // Auto-hide toast after 4 seconds
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) toast.style.display = 'none';
+        }, 4000);
+
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

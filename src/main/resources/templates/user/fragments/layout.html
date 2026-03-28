@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="main-layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSM Alumni Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --amber: #c9a227;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-sans {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--amber);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 font-sans flex flex-col min-h-screen">
+    <header class="bg-primary shadow-2xl sticky top-0 z-50 border-b border-white/10">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2.5 rounded-xl shadow-inner transform rotate-3">
+                    <span class="text-primary font-bold text-xl leading-none">BSM</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-white font-serif font-bold text-lg tracking-tight leading-none">Alumni
+                        Connect</span>
+                    <span class="text-amber-400 text-[10px] uppercase tracking-[0.2em] font-semibold">Bright Scholar
+                        Madrasah</span>
+                </div>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a th:href="@{/home}" class="nav-link text-white/90 text-sm font-semibold flex items-center gap-2">
+                    <i data-lucide="home" class="w-4 h-4"></i> Home
+                </a>
+                <a th:href="@{/about}" class="nav-link text-slate-300 text-sm font-semibold flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4"></i> About
+                </a>
+                <a th:href="@{/event}" class="nav-link text-slate-300 text-sm font-semibold flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-4 h-4"></i> Events
+                </a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div th:if="${session.loggedInUser != null}"
+                    class="flex items-center gap-3 pl-6 border-l border-white/10">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-white text-xs font-bold leading-none" th:text="${session.loggedInUser.username}">
+                            Username</p>
+                        <p class="text-amber-500 text-[10px] uppercase font-bold">Member</p>
+                    </div>
+                    <a th:href="@{/logout}"
+                        class="p-2 bg-white/10 hover:bg-red-500/20 text-white rounded-lg transition-all" title="Logout">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </a>
+                </div>
+
+                <div th:if="${session.loggedInUser == null}" class="flex items-center gap-3">
+                    <a th:href="@{/login}"
+                        class="text-white text-sm font-semibold hover:text-amber-400 transition-colors">Login</a>
+                    <a th:href="@{/signup}"
+                        class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-lg">Join
+                        Now</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow">
+        <div th:insert="${content}"></div>
+    </main>
+
+    <footer th:replace="~{user/fragments/footer :: footer}"></footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

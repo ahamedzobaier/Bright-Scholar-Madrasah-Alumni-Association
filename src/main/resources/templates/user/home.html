@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/fragments/layout :: main-layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home - BSM Alumni Connect</title>
+</head>
+
+<body>
+    <section>
+        <div class="relative bg-slate-900 overflow-hidden">
+            <div class="absolute inset-0 opacity-20"
+                style="background-image: url('https://www.transparenttextures.com/patterns/cubes.png');"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative z-10">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="animate-fade-up">
+                        <span
+                            class="inline-block px-4 py-1 bg-amber-500/20 text-amber-500 rounded-full text-sm font-bold mb-4 uppercase tracking-widest">
+                            Welcome Alumni
+                        </span>
+                        <h2 class="font-serif text-4xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                            Connecting Bright Scholars <span class="text-amber-500">Across Generations</span>
+                        </h2>
+                        <p class="text-slate-300 text-lg mb-8 leading-relaxed max-w-xl">
+                            Join our vibrant community of alumni making a difference. Share experiences, network with
+                            peers, and contribute to your alma mater's legacy.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a th:href="@{/event}"
+                                class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-8 py-4 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2">
+                                <i data-lucide="calendar" class="w-5 h-5"></i> View Events
+                            </a>
+                            <a th:href="@{/about}"
+                                class="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-bold transition-all backdrop-blur-sm border border-white/10">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hidden lg:block relative">
+                        <div
+                            class="bg-gradient-to-br from-amber-500 to-amber-600 p-1 rounded-3xl shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                            <div class="bg-slate-900 rounded-[calc(1.5rem-1px)] p-10">
+                                <div class="grid grid-cols-2 gap-8">
+                                    <div class="text-center">
+                                        <h4 class="text-4xl font-bold text-white mb-1">5K+</h4>
+                                        <p class="text-slate-400 text-xs uppercase font-bold tracking-widest">Global
+                                            Alumni</p>
+                                    </div>
+                                    <div class="text-center border-l border-white/10">
+                                        <h4 class="text-4xl font-bold text-amber-500 mb-1">20+</h4>
+                                        <p class="text-slate-400 text-xs uppercase font-bold tracking-widest">Chapters
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-serif mb-4">Our Core Mission</h2>
+                    <div class="w-20 h-1 bg-amber-500 mx-auto"></div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div
+                        class="p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-[#1e3a5f] transition-colors">
+                            <i data-lucide="target" class="text-[#1e3a5f] group-hover:text-white w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-xl mb-4 text-slate-900">Build Networks</h4>
+                        <p class="text-slate-600 leading-relaxed">Connect alumni across generations and professions
+                            worldwide through our exclusive digital platform.</p>
+                    </div>
+
+                    <div
+                        class="p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-amber-500 transition-colors">
+                            <i data-lucide="hand-heart" class="text-amber-600 group-hover:text-white w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-xl mb-4 text-slate-900">Support Students</h4>
+                        <p class="text-slate-600 leading-relaxed">Providing scholarships and mentorship programs to help
+                            the next generation of Bright Scholars succeed.</p>
+                    </div>
+
+                    <div
+                        class="p-8 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                        <div
+                            class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-green-600 transition-colors">
+                            <i data-lucide="sparkles" class="text-green-600 group-hover:text-white w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-xl mb-4 text-slate-900">Uphold Excellence</h4>
+                        <p class="text-slate-600 leading-relaxed">Continuing the tradition of academic and professional
+                            brilliance that defines our institution.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
