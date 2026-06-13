@@ -1,6 +1,5 @@
 package com.bsmaa.alumni_connect.controller;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.bsmaa.alumni_connect.service.FileUploadService;
+import java.io.IOException;
 
 import com.bsmaa.alumni_connect.model.Admin;
 import com.bsmaa.alumni_connect.model.BlogPost;
@@ -24,7 +25,6 @@ import com.bsmaa.alumni_connect.repository.EventRepository;
 import com.bsmaa.alumni_connect.repository.UserRepository;
 import com.bsmaa.alumni_connect.service.AdminService;
 import com.bsmaa.alumni_connect.service.UserService;
-import com.bsmaa.alumni_connect.util.FileUploadUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -46,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private BlogPostRepository blogPostRepository;
+
+    @Autowired
+    private FileUploadService fileUploadService;
 
     // --- HELPER METHOD: Security Check ---
     private boolean isAdminNotLoggedIn(HttpSession session) {
@@ -168,36 +171,25 @@ public class AdminController {
         return "admin/events";
     }
 
-    // 10. Show Create Event Form (Secured)
-    @GetMapping("/events/new")
-    public String showCreateEventForm(HttpSession session, Model model) {
-        if (isAdminNotLoggedIn(session)) {
-            return "redirect:/admin/login";
-        }
-
-        model.addAttribute("event", new Event());
-        return "admin/event_form";
-    }
-
     // 11. Save Event (Secured)
     @PostMapping("/events/save")
     public String saveEvent(@ModelAttribute("event") Event event,
-            @RequestParam("imageFile") MultipartFile imageFile,
-            HttpSession session,
-            RedirectAttributes ra) {
+                            @RequestParam(value = "file", required = false) MultipartFile file,
+                            HttpSession session,
+                            RedirectAttributes ra) {
         if (isAdminNotLoggedIn(session)) {
             return "redirect:/admin/login";
         }
 
         try {
-            if (imageFile != null && !imageFile.isEmpty()) {
-                String imageUrl = FileUploadUtil.saveFile(imageFile);
-                event.setImageUrl(imageUrl);
+            if (file != null && !file.isEmpty()) {
+                String fileUrl = fileUploadService.uploadFile(file, "events");
+                event.setImageUrl(fileUrl);
             }
             eventRepository.save(event);
             ra.addFlashAttribute("message", "Event published successfully!");
         } catch (IOException e) {
-            ra.addFlashAttribute("error", "Failed to upload event image.");
+            ra.addFlashAttribute("error", "Failed to upload banner: " + e.getMessage());
         }
         return "redirect:/admin/events";
     }

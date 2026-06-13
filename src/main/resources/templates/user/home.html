@@ -60,7 +60,138 @@
             </div>
         </div>
 
-        <div class="py-24 bg-white">
+        <!-- Upcoming Events Section -->
+        <div class="py-20 bg-slate-50 border-b border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <span class="text-amber-500 text-sm font-bold uppercase tracking-widest block mb-2">Join Us</span>
+                        <h2 class="text-3xl md:text-4xl font-bold text-[#1e3a5f] font-serif">Upcoming Events</h2>
+                    </div>
+                    <a th:href="@{/event}" class="text-[#1e3a5f] hover:text-amber-600 font-bold flex items-center gap-1.5 transition-colors mt-4 md:mt-0">
+                        View All Events <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- If no events -->
+                    <div th:if="${events == null or #lists.isEmpty(events)}"
+                        class="col-span-full py-16 text-center bg-white rounded-2xl border-2 border-dashed border-slate-200">
+                        <i data-lucide="calendar-off" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
+                        <p class="text-slate-500 font-medium">No upcoming events scheduled at the moment.</p>
+                    </div>
+
+                    <!-- Events Loop -->
+                    <div th:each="event : ${events}"
+                        class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group flex flex-col justify-between">
+                        <div>
+                            <a th:href="@{/event/view/{id}(id=${event.id})}" class="block h-48 bg-slate-200 relative overflow-hidden">
+                                <img th:if="${event.imageUrl != null}" th:src="${event.imageUrl}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    alt="Event Image">
+                                <div th:unless="${event.imageUrl != null}"
+                                    class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1e3a5f] to-slate-700">
+                                    <i data-lucide="image" class="w-12 h-12 text-white/20"></i>
+                                </div>
+                                <div class="absolute top-4 left-4 bg-white rounded-xl p-2 shadow-lg text-center min-w-[60px]">
+                                    <span class="block text-xl font-bold text-[#1e3a5f] leading-none"
+                                        th:text="${#temporals.format(event.eventDate, 'dd')}">15</span>
+                                    <span class="block text-[10px] uppercase font-bold text-amber-600 tracking-wider"
+                                        th:text="${#temporals.format(event.eventDate, 'MMM')}">MAR</span>
+                                </div>
+                            </a>
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 text-amber-600 mb-3">
+                                    <i data-lucide="tag" class="w-3 h-3"></i>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest"
+                                        th:text="${event.status}">UPCOMING</span>
+                                </div>
+                                <a th:href="@{/event/view/{id}(id=${event.id})}">
+                                    <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#1e3a5f] transition-colors line-clamp-1"
+                                        th:text="${event.title}">Event Title</h3>
+                                </a>
+                                <div class="space-y-2 mb-4">
+                                    <div class="flex items-center gap-2 text-slate-500 text-sm">
+                                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i>
+                                        <span class="line-clamp-1" th:text="${event.location}">Location</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 text-slate-500 text-sm">
+                                        <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                                        <span th:text="${#temporals.format(event.eventDate, 'hh:mm a')}">Time</span>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 text-sm line-clamp-3 mb-2 leading-relaxed" th:text="${event.description}">
+                                    Event description goes here.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6">
+                            <a th:href="@{/event/view/{id}(id=${event.id})}"
+                                class="block w-full text-center py-2.5 bg-slate-50 hover:bg-[#1e3a5f] hover:text-white text-[#1e3a5f] font-bold rounded-xl transition-all border border-slate-100 text-sm">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Blogs Section -->
+        <div class="py-20 bg-white border-b border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <span class="text-amber-500 text-sm font-bold uppercase tracking-widest block mb-2">Stories</span>
+                        <h2 class="text-3xl md:text-4xl font-bold text-[#1e3a5f] font-serif">Alumni Insights & Stories</h2>
+                    </div>
+                    <a th:href="@{/blog}" class="text-[#1e3a5f] hover:text-amber-600 font-bold flex items-center gap-1.5 transition-colors mt-4 md:mt-0">
+                        Read All Stories <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- If no blogs -->
+                    <div th:if="${blogs == null or #lists.isEmpty(blogs)}"
+                        class="col-span-full py-16 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                        <i data-lucide="book-open" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
+                        <p class="text-slate-500 font-medium">No stories published yet.</p>
+                    </div>
+
+                    <!-- Blogs Loop -->
+                    <div th:each="post : ${blogs}"
+                        class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+                        <div class="p-8">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                                    th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4 group-hover:text-[#1e3a5f] transition-colors leading-tight line-clamp-2"
+                                th:text="${post.title}">Post Title</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-3"
+                                th:text="${#strings.abbreviate(post.content, 150)}">
+                                Short summary of the blog post...
+                            </p>
+                        </div>
+                        <div class="p-8 pt-0">
+                            <div class="flex items-center justify-between pt-6 border-t border-slate-200/60">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-slate-200/80 rounded-full flex items-center justify-center">
+                                        <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-700" th:text="${post.authorName}">Author</span>
+                                </div>
+                                <a th:href="@{/blog/view/{id}(id=${post.id})}"
+                                    class="text-[#1e3a5f] text-sm font-bold flex items-center gap-1 hover:gap-2 transition-all">
+                                    Read <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-24 bg-slate-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <div class="mb-16">
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-serif mb-4">Our Core Mission</h2>
@@ -100,110 +231,6 @@
                         <p class="text-slate-600 leading-relaxed">Continuing the tradition of academic and professional
                             brilliance that defines our institution.</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Upcoming Events Section -->
-        <div class="py-24 bg-slate-50 border-t border-b border-slate-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <span class="inline-block px-4 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-                        Mark Your Calendar
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-serif mb-4">Upcoming Gatherings</h2>
-                    <div class="w-20 h-1 bg-amber-500 mx-auto"></div>
-                </div>
-
-                <div th:if="${#lists.isEmpty(events)}" class="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200 max-w-xl mx-auto">
-                    <i data-lucide="calendar-off" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
-                    <p class="text-slate-500 font-semibold">No upcoming events scheduled at this time.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" th:unless="${#lists.isEmpty(events)}">
-                    <div th:each="event : ${events}" class="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all group flex flex-col">
-                        <a th:href="@{/event/view/{id}(id=${event.id})}" class="aspect-video w-full overflow-hidden bg-slate-100 relative block">
-                            <img th:if="${event.imageUrl != null}" th:src="${event.imageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Event Banner">
-                            <div th:unless="${event.imageUrl != null}" class="w-full h-full flex items-center justify-center bg-[#1e3a5f]/5 text-[#1e3a5f]/30">
-                                <i data-lucide="image" class="w-12 h-12"></i>
-                            </div>
-                            <span class="absolute top-4 right-4 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase" th:text="${event.status}">Status</span>
-                        </a>
-                        <div class="p-6 flex-grow flex flex-col justify-between">
-                            <div>
-                                <a th:href="@{/event/view/{id}(id=${event.id})}">
-                                    <h4 class="font-bold text-xl text-slate-900 mb-3 group-hover:text-amber-500 transition-colors" th:text="${event.title}">Event Title</h4>
-                                </a>
-                                <p class="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3" th:text="${event.description}">Short description of the event...</p>
-                            </div>
-                            <div class="space-y-2.5 pt-4 border-t border-slate-50 text-xs font-semibold text-slate-500 flex items-center justify-between">
-                                <div class="space-y-2">
-                                    <div class="flex items-center gap-2">
-                                        <i data-lucide="calendar" class="w-4 h-4 text-amber-500"></i>
-                                        <span th:text="${#temporals.format(event.eventDate, 'dd MMM yyyy, HH:mm')}">Date</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <i data-lucide="map-pin" class="w-4 h-4 text-amber-500"></i>
-                                        <span th:text="${event.location}">Location</span>
-                                    </div>
-                                </div>
-                                <a th:href="@{/event/view/{id}(id=${event.id})}" class="text-xs font-bold text-[#1e3a5f] hover:text-amber-500 flex items-center gap-1 transition-colors self-end pb-0.5">
-                                    View Details <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-12" th:unless="${#lists.isEmpty(events)}">
-                    <a th:href="@{/event}" class="inline-flex items-center gap-2 text-[#1e3a5f] hover:text-amber-500 font-bold transition-colors">
-                        View All Events <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Latest Stories Section -->
-        <div class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <span class="inline-block px-4 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-                        Alumni Voices
-                    </span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-serif mb-4">Latest Stories & Insights</h2>
-                    <div class="w-20 h-1 bg-amber-500 mx-auto"></div>
-                </div>
-
-                <div th:if="${#lists.isEmpty(blogs)}" class="text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 max-w-xl mx-auto">
-                    <i data-lucide="book-open" class="w-12 h-12 text-slate-300 mx-auto mb-4"></i>
-                    <p class="text-slate-500 font-semibold">No stories published yet.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" th:unless="${#lists.isEmpty(blogs)}">
-                    <div th:each="post : ${blogs}" class="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-md hover:shadow-xl transition-all group flex flex-col justify-between">
-                        <div class="p-6 flex-grow">
-                            <span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-[9px] font-bold uppercase tracking-wider block w-fit mb-4" th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
-                            <h4 class="font-bold text-xl text-slate-900 mb-3 group-hover:text-amber-500 transition-colors" th:text="${post.title}">Blog Title</h4>
-                            <p class="text-slate-600 text-sm leading-relaxed line-clamp-3" th:text="${#strings.abbreviate(post.content, 120)}">Story content...</p>
-                        </div>
-                        <div class="p-6 bg-slate-50/50 border-t border-slate-50 flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <div class="w-7 h-7 bg-slate-100 rounded-full flex items-center justify-center">
-                                    <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
-                                </div>
-                                <span class="text-xs font-bold text-slate-700" th:text="${post.authorName}">Author</span>
-                            </div>
-                            <a th:href="@{/blog/view/{id}(id=${post.id})}" class="text-xs font-bold text-[#1e3a5f] hover:text-amber-500 flex items-center gap-1 transition-colors">
-                                Read Article <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-12" th:unless="${#lists.isEmpty(blogs)}">
-                    <a th:href="@{/blog}" class="inline-flex items-center gap-2 text-[#1e3a5f] hover:text-amber-500 font-bold transition-colors">
-                        Read More Stories <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </a>
                 </div>
             </div>
         </div>

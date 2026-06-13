@@ -49,6 +49,7 @@
 
     <div th:replace="~{admin/fragments :: navbar}"></div>
     <div th:replace="~{admin/fragments :: sidebar('dashboard')}"></div>
+    <div th:replace="~{admin/fragments :: eventModal}"></div>
 
     <div id="main-content" class="min-h-screen flex flex-col">
         <main class="p-4 md:p-8 space-y-8 flex-grow">
@@ -59,10 +60,10 @@
                     <p class="text-slate-500 text-sm">Manage your alumni network and pending requests.</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a th:href="@{/admin/events/new}"
+                    <button onclick="openEventModal()"
                         class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-amber-500 hover:text-slate-900 transition-all shadow-sm">
                         <i data-lucide="plus" class="w-5 h-5"></i> Create New Event
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -193,6 +194,7 @@
         <span class="text-sm font-bold" th:text="${message}">Action Successful!</span>
     </div>
 
+    <script th:replace="~{admin/fragments :: eventModalScript}"></script>
     <script>
         // Sidebar Toggle
         function toggleSidebar() {

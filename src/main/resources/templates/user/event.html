@@ -26,7 +26,7 @@
             <div th:each="event : ${events}"
                 class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group">
 
-                <div class="h-48 bg-slate-200 relative overflow-hidden">
+                <a th:href="@{/event/view/{id}(id=${event.id})}" class="block h-48 bg-slate-200 relative overflow-hidden">
                     <img th:if="${event.imageUrl != null}" th:src="${event.imageUrl}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         alt="Event Image">
@@ -42,7 +42,7 @@
                         <span class="block text-[10px] uppercase font-bold text-amber-600 tracking-wider"
                             th:text="${#temporals.format(event.eventDate, 'MMM')}">MAR</span>
                     </div>
-                </div>
+                </a>
 
                 <div class="p-6">
                     <div class="flex items-center gap-2 text-amber-600 mb-3">
@@ -51,8 +51,10 @@
                             th:text="${event.status}">UPCOMING</span>
                     </div>
 
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#1e3a5f] transition-colors"
-                        th:text="${event.title}">Event Title</h3>
+                    <a th:href="@{/event/view/{id}(id=${event.id})}">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#1e3a5f] transition-colors"
+                            th:text="${event.title}">Event Title</h3>
+                    </a>
 
                     <div class="space-y-2 mb-6">
                         <div class="flex items-center gap-2 text-slate-500 text-sm">

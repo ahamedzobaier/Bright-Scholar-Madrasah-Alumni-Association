@@ -1,6 +1,5 @@
 package com.bsmaa.alumni_connect.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.bsmaa.alumni_connect.service.FileUploadService;
+import java.io.IOException;
 
 import com.bsmaa.alumni_connect.model.Achievement;
 import com.bsmaa.alumni_connect.model.BlogPost;
@@ -22,7 +23,6 @@ import com.bsmaa.alumni_connect.repository.BlogPostRepository;
 import com.bsmaa.alumni_connect.repository.EventRepository;
 import com.bsmaa.alumni_connect.repository.UserRepository;
 import com.bsmaa.alumni_connect.service.UserService;
-import com.bsmaa.alumni_connect.util.FileUploadUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -43,6 +43,9 @@ public class MainController {
 
     @Autowired
     private AchievementRepository achievementRepository;
+
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @GetMapping("/")
     public String root() {
@@ -105,7 +108,7 @@ public class MainController {
         }
         model.addAttribute("user", user);
 
-        // Fetch up to 3 upcoming events
+        // Fetch upcoming events (limit to 3)
         List<Event> upcomingEvents = eventRepository.findAll().stream()
             .filter(e -> "UPCOMING".equalsIgnoreCase(e.getStatus()))
             .sorted((e1, e2) -> e1.getEventDate().compareTo(e2.getEventDate()))
@@ -113,11 +116,13 @@ public class MainController {
             .toList();
         model.addAttribute("events", upcomingEvents);
 
-        // Fetch up to 3 latest published blogs
-        List<BlogPost> latestBlogs = blogPostRepository.findByStatusOrderByCreatedAtDesc("PUBLISHED").stream()
+        // Fetch recent published blogs (limit to 3)
+        List<BlogPost> recentBlogs = blogPostRepository.findAll().stream()
+            .filter(b -> "PUBLISHED".equalsIgnoreCase(b.getStatus()))
+            .sorted((b1, b2) -> b2.getCreatedAt().compareTo(b1.getCreatedAt()))
             .limit(3)
             .toList();
-        model.addAttribute("blogs", latestBlogs);
+        model.addAttribute("blogs", recentBlogs);
 
         return "user/home";
     }
@@ -231,34 +236,23 @@ public class MainController {
         return "user/event_detail";
     }
 
-    @PostMapping("/profile/update")
-    public String updateProfile(@RequestParam("email") String email,
-            @RequestParam("batch") String batch,
-            @RequestParam("department") String department,
-            @RequestParam("profilePicFile") MultipartFile profilePicFile,
-            HttpSession session,
-            RedirectAttributes ra) {
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
+    @PostMapping("/profile/upload-pic")
+    public String uploadProfilePic(@RequestParam("file") MultipartFile file, HttpSession session, RedirectAttributes ra) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
             return "redirect:/login";
         }
-
         try {
-            User user = userRepository.findById(loggedInUser.getUserId()).orElseThrow();
-            user.setEmail(email);
-            user.setBatch(batch);
-            user.setDepartment(department);
-
-            if (profilePicFile != null && !profilePicFile.isEmpty()) {
-                String imageUrl = FileUploadUtil.saveFile(profilePicFile);
-                user.setProfilePicUrl(imageUrl);
+            String fileUrl = fileUploadService.uploadFile(file, "profiles");
+            if (fileUrl != null) {
+                User dbUser = userRepository.findById(user.getUserId()).orElseThrow();
+                dbUser.setProfilePicUrl(fileUrl);
+                userRepository.save(dbUser);
+                session.setAttribute("loggedInUser", dbUser);
+                ra.addFlashAttribute("message", "Profile picture updated successfully!");
             }
-
-            userRepository.save(user);
-            session.setAttribute("loggedInUser", user);
-            ra.addFlashAttribute("message", "Profile updated successfully!");
         } catch (IOException e) {
-            ra.addFlashAttribute("error", "Failed to upload profile picture.");
+            ra.addFlashAttribute("error", "Failed to upload image: " + e.getMessage());
         }
         return "redirect:/profile";
     }

@@ -1,4 +1,4 @@
-/* --- UU Transport Hero Slider Logic --- */
+
 
 let currentSlide = 0;
 let slideInterval;
