@@ -1,5 +1,6 @@
 package com.bsmaa.alumni_connect.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,17 +12,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bsmaa.alumni_connect.model.Admin;
-import com.bsmaa.alumni_connect.model.Blog;
+import com.bsmaa.alumni_connect.model.BlogPost;
 import com.bsmaa.alumni_connect.model.Event;
 import com.bsmaa.alumni_connect.model.User;
-import com.bsmaa.alumni_connect.repository.BlogRepository;
+import com.bsmaa.alumni_connect.repository.BlogPostRepository;
 import com.bsmaa.alumni_connect.repository.EventRepository;
 import com.bsmaa.alumni_connect.repository.UserRepository;
 import com.bsmaa.alumni_connect.service.AdminService;
 import com.bsmaa.alumni_connect.service.UserService;
+import com.bsmaa.alumni_connect.util.FileUploadUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -42,7 +45,7 @@ public class AdminController {
     private EventRepository eventRepository;
 
     @Autowired
-    private BlogRepository blogRepository;
+    private BlogPostRepository blogPostRepository;
 
     // --- HELPER METHOD: Security Check ---
     private boolean isAdminNotLoggedIn(HttpSession session) {
@@ -178,13 +181,24 @@ public class AdminController {
 
     // 11. Save Event (Secured)
     @PostMapping("/events/save")
-    public String saveEvent(@ModelAttribute("event") Event event, HttpSession session, RedirectAttributes ra) {
+    public String saveEvent(@ModelAttribute("event") Event event,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            HttpSession session,
+            RedirectAttributes ra) {
         if (isAdminNotLoggedIn(session)) {
             return "redirect:/admin/login";
         }
 
-        eventRepository.save(event);
-        ra.addFlashAttribute("message", "Event published successfully!");
+        try {
+            if (imageFile != null && !imageFile.isEmpty()) {
+                String imageUrl = FileUploadUtil.saveFile(imageFile);
+                event.setImageUrl(imageUrl);
+            }
+            eventRepository.save(event);
+            ra.addFlashAttribute("message", "Event published successfully!");
+        } catch (IOException e) {
+            ra.addFlashAttribute("error", "Failed to upload event image.");
+        }
         return "redirect:/admin/events";
     }
 
@@ -195,10 +209,36 @@ public class AdminController {
             return "redirect:/admin/login";
         }
 
-        List<Blog> allBlogs = blogRepository.findAll();
+        List<BlogPost> allBlogs = blogPostRepository.findAll();
         model.addAttribute("blogs", allBlogs);
         model.addAttribute("activePage", "blogs");
         return "admin/blog_management";
+    }
+
+    @PostMapping("/blogs/approve")
+    public String approveBlog(@RequestParam Long blogId, HttpSession session, RedirectAttributes ra) {
+        if (isAdminNotLoggedIn(session)) {
+            return "redirect:/admin/login";
+        }
+        blogPostRepository.findById(blogId).ifPresent(post -> {
+            post.setStatus("PUBLISHED");
+            blogPostRepository.save(post);
+        });
+        ra.addFlashAttribute("message", "Blog post approved and published!");
+        return "redirect:/admin/blogs";
+    }
+
+    @PostMapping("/blogs/reject")
+    public String rejectBlog(@RequestParam Long blogId, HttpSession session, RedirectAttributes ra) {
+        if (isAdminNotLoggedIn(session)) {
+            return "redirect:/admin/login";
+        }
+        blogPostRepository.findById(blogId).ifPresent(post -> {
+            post.setStatus("REJECTED");
+            blogPostRepository.save(post);
+        });
+        ra.addFlashAttribute("message", "Blog post rejected.");
+        return "redirect:/admin/blogs";
     }
 
     // 13. Logout

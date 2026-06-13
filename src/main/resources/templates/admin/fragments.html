@@ -38,6 +38,14 @@
                 th:classappend="${activePage == 'members' ? 'bg-amber-500 text-slate-900 font-bold shadow-lg' : 'text-slate-300 hover:bg-white/5'}">
                 <i data-lucide="users" class="w-5 h-5"></i> Members
             </a>
+            <a th:href="@{/admin/events}" class="flex items-center gap-4 p-4 rounded-xl transition-all"
+                th:classappend="${activePage == 'events' ? 'bg-amber-500 text-slate-900 font-bold shadow-lg' : 'text-slate-300 hover:bg-white/5'}">
+                <i data-lucide="calendar" class="w-5 h-5"></i> Events
+            </a>
+            <a th:href="@{/admin/blogs}" class="flex items-center gap-4 p-4 rounded-xl transition-all"
+                th:classappend="${activePage == 'blogs' ? 'bg-amber-500 text-slate-900 font-bold shadow-lg' : 'text-slate-300 hover:bg-white/5'}">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Blogs
+            </a>
             <hr class="border-white/10 my-4">
             <a th:href="@{/admin/logout}"
                 class="flex items-center gap-4 p-4 rounded-xl text-red-400 hover:bg-red-500/10 font-bold">

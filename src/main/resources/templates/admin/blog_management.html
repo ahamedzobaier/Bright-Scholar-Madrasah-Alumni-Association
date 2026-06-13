@@ -3,64 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manage Members - Admin</title>
+    <title>Blog Management | BSM Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Transition Logic */
+        body.sidebar-visible #admin-sidebar {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 1024px) {
+            #main-content {
+                transition: margin-left 0.3s ease-in-out;
+            }
+
+            body.sidebar-visible #main-content {
+                margin-left: 288px;
+            }
+        }
+
+        [data-lucide] {
+            width: 18px !important;
+            height: 18px !important;
+            display: inline-block;
+            stroke: currentColor;
+        }
+    </style>
 </head>
 
 <body class="bg-slate-50">
-    <div th:replace="~{admin/fragments :: sidebar('members')}"></div>
 
-    <div class="lg:ml-64 min-h-screen">
-        <div th:replace="~{admin/fragments :: navbar}"></div>
+    <div th:replace="~{admin/fragments :: navbar}"></div>
+    <div th:replace="~{admin/fragments :: sidebar('blogs')}"></div>
 
-        <main class="p-6">
-            <h1 class="text-2xl font-bold text-slate-800 mb-8">Manage Members</h1>
+    <div id="main-content" class="min-h-screen flex flex-col">
+        <main class="p-4 md:p-8 space-y-6 flex-grow">
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900">Blog Moderation</h1>
+                    <p class="text-slate-500 text-sm">Review, approve, or reject user-submitted stories and blogs.</p>
+                </div>
+            </div>
 
             <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 text-slate-500 text-xs font-bold uppercase">
-                        <tr>
-                            <th class="p-4">Name/Email</th>
-                            <th class="p-4">Batch</th>
-                            <th class="p-4">Department</th>
-                            <th class="p-4">Status</th>
-                            <th class="p-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr th:each="user : ${users}" class="hover:bg-slate-50 transition-colors">
-                            <td class="p-4">
-                                <div class="font-bold text-slate-900" th:text="${user.username}">Username</div>
-                                <div class="text-xs text-slate-500" th:text="${user.email}">email@example.com</div>
-                            </td>
-                            <td class="p-4 text-slate-600" th:text="${user.batch}">2020</td>
-                            <td class="p-4 text-slate-600" th:text="${user.department}">CSE</td>
-                            <td class="p-4">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold"
-                                    th:classappend="${user.status == 'APPROVED' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}"
-                                    th:text="${user.status}">PENDING</span>
-                            </td>
-                            <td class="p-4 text-right space-x-2">
-                                <a th:href="@{/admin/members/edit/{id}(id=${user.id})}"
-                                    class="inline-flex p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                                    <i data-lucide="edit" class="w-4 h-4"></i>
-                                </a>
-                                <form th:action="@{/admin/approve}" method="post" class="inline"
-                                    th:if="${user.status == 'PENDING'}">
-                                    <input type="hidden" name="userId" th:value="${user.id}">
-                                    <button type="submit" class="p-2 text-green-600 hover:bg-green-50 rounded-lg"><i
-                                            data-lucide="check-circle" class="w-4 h-4"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Blog Details</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Author</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr th:each="post : ${blogs}" class="hover:bg-slate-50/80 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900" th:text="${post.title}">Title</div>
+                                    <div class="text-xs text-slate-400 mt-1 truncate max-w-lg" th:text="${post.content}">Content snippet...</div>
+                                    <div class="text-[10px] text-slate-400 mt-1" th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy, HH:mm')}">Date</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-semibold text-slate-800" th:text="${post.authorName}">Name</div>
+                                    <div class="text-xs text-slate-500" th:text="'@' + ${post.authorUsername}">@username</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                                        th:classappend="${post.status == 'PUBLISHED' ? 'bg-green-100 text-green-700' : (post.status == 'REJECTED' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700')}"
+                                        th:text="${post.status}">PENDING</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2" th:if="${post.status == 'PENDING'}">
+                                        <form th:action="@{/admin/blogs/approve}" method="post">
+                                            <input type="hidden" name="blogId" th:value="${post.id}">
+                                            <button type="submit"
+                                                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-green-50 text-green-600 hover:bg-green-600 hover:text-white transition-all">
+                                                Approve
+                                            </button>
+                                        </form>
+                                        <form th:action="@{/admin/blogs/reject}" method="post">
+                                            <input type="hidden" name="blogId" th:value="${post.id}">
+                                            <button type="submit"
+                                                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all">
+                                                Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${blogs == null or blogs.empty}">
+                                <td colspan="4" class="px-6 py-20 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <i data-lucide="inbox" class="w-12 h-12 text-slate-200"></i>
+                                        <p class="text-slate-400 font-medium">No blog posts found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
+
+        <footer class="p-6 text-center text-slate-400 text-xs border-t border-slate-200 bg-white">
+            © 2026 BSM Alumni Association • Moderation Portal
+        </footer>
     </div>
-    <div th:replace="~{admin/admin_footer :: admin-footer}"></div>
-    <script>lucide.createIcons();</script>
+
+    <div th:if="${message}" id="toast"
+        class="fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] flex items-center gap-3 animate-bounce">
+        <i data-lucide="info" class="w-5 h-5 text-amber-400"></i>
+        <span class="text-sm font-bold" th:text="${message}">Action Successful!</span>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-visible');
+        }
+
+        // Auto-hide toast after 4 seconds
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) toast.style.display = 'none';
+        }, 4000);
+
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@ package com.bsmaa.alumni_connect.service;
 
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,24 @@ public class UserService {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (user.getPassword().equals(password)) {
+            String storedPassword = user.getPassword();
+            boolean passwordMatch = false;
+            boolean upgradeNeeded = false;
+
+            if (storedPassword != null && (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$") || storedPassword.startsWith("$2y$"))) {
+                passwordMatch = BCrypt.checkpw(password, storedPassword);
+            } else {
+                if (password.equals(storedPassword)) {
+                    passwordMatch = true;
+                    upgradeNeeded = true;
+                }
+            }
+
+            if (passwordMatch) {
+                if (upgradeNeeded) {
+                    user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+                    userRepository.save(user);
+                }
                 if ("APPROVED".equalsIgnoreCase(user.getStatus())) {
                     return "SUCCESS";
                 }
@@ -39,6 +57,14 @@ public class UserService {
      * admin approval.
      */
     public void register(User user) {
+        // Check if username or email already exists to prevent duplicate entries
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists.");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists.");
+        }
+
         // 1. Mandatory status for your approval logic
         user.setStatus("PENDING");
 
@@ -47,7 +73,12 @@ public class UserService {
             user.setAccountType("General Member");
         }
 
-        // 3. Save to MySQL
+        // 3. Encrypt password using BCrypt
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        }
+
+        // 4. Save to MySQL
         userRepository.save(user);
     }
 

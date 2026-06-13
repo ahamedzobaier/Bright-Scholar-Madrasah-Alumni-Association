@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{user/fragments/layout :: main-layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Detail - BSM Alumni</title>
+</head>
+
+<body>
+    <section class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="mb-8">
+            <a th:href="@{/blog}"
+                class="text-[#1e3a5f] hover:text-amber-500 font-bold flex items-center gap-2 mb-6 transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Blog
+            </a>
+
+            <div class="flex items-center gap-2 mb-4">
+                <span
+                    class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-bold text-[#1e3a5f] font-serif leading-tight mb-6"
+                th:text="${post.title}">Blog Title</h1>
+
+            <div class="flex items-center gap-3 pb-8 border-b border-slate-200">
+                <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+                    <i data-lucide="user" class="w-5 h-5 text-slate-400"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-slate-700" th:text="${post.authorName}">Author Name</p>
+                    <p class="text-[10px] text-slate-400 font-semibold" th:text="'@' + ${post.authorUsername}">
+                        @username</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="prose max-w-none text-slate-700 leading-relaxed text-lg whitespace-pre-wrap font-sans"
+            th:text="${post.content}">
+            Blog Content...
+        </div>
+    </section>
+</body>
+
+</html>

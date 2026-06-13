@@ -3,80 +3,203 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Manage Events</title>
+    <title>Event Management | BSM Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Transition Logic */
+        body.sidebar-visible #admin-sidebar {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 1024px) {
+            #main-content {
+                transition: margin-left 0.3s ease-in-out;
+            }
+
+            body.sidebar-visible #main-content {
+                margin-left: 288px;
+            }
+        }
+
+        [data-lucide] {
+            width: 18px !important;
+            height: 18px !important;
+            display: inline-block;
+            stroke: currentColor;
+        }
+    </style>
 </head>
 
 <body class="bg-slate-50">
-    <div class="flex min-h-screen">
-        <aside class="w-64 bg-slate-900 text-white p-6 hidden md:block">
-            <h2 class="text-xl font-bold mb-8 text-amber-500">BSM Admin</h2>
-            <nav class="space-y-4">
-                <a href="#" class="block text-slate-400 hover:text-white">Dashboard</a>
-                <a th:href="@{/admin/events}" class="block text-white font-bold">Manage Events</a>
-                <a href="/home" class="block text-slate-400 hover:text-white border-t border-slate-800 pt-4">Exit to
-                    Site</a>
-            </nav>
-        </aside>
 
-        <main class="flex-1 p-8">
-            <div class="flex justify-between items-center mb-8">
+    <div th:replace="~{admin/fragments :: navbar}"></div>
+    <div th:replace="~{admin/fragments :: sidebar('events')}"></div>
+
+    <div id="main-content" class="min-h-screen flex flex-col">
+        <main class="p-4 md:p-8 space-y-6 flex-grow">
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-800">Event Management</h1>
-                    <p class="text-slate-500">Manage all alumni gatherings and workshops</p>
+                    <h1 class="text-2xl font-bold text-slate-900">Event Management</h1>
+                    <p class="text-slate-500 text-sm">Manage all alumni gatherings and workshops.</p>
                 </div>
-                <button
-                    class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-4 py-2 rounded-lg font-bold flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i> Create New Event
+                <div class="flex items-center gap-3">
+                    <button onclick="openModal()"
+                        class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-amber-500 hover:text-slate-900 transition-all shadow-sm">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Create New Event
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Title</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
+                                <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr th:each="event : ${events}" class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-800" th:text="${event.title}">Event Title</div>
+                                    <div class="text-xs text-slate-400 truncate w-48" th:text="${event.description}">Desc</div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600">
+                                    <span th:text="${#temporals.format(event.eventDate, 'dd MMM yyyy')}">Date</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-slate-600" th:text="${event.location}">Location</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase"
+                                        th:classappend="${event.status == 'UPCOMING' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}"
+                                        th:text="${event.status}">Status</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end gap-2">
+                                        <a href="#" class="p-2 text-slate-400 hover:text-amber-600" title="Edit">
+                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                        </a>
+                                        <a href="#" class="p-2 text-slate-400 hover:text-red-600" title="Delete">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${events == null or events.empty}">
+                                <td colspan="5" class="px-6 py-20 text-center">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <i data-lucide="inbox" class="w-12 h-12 text-slate-200"></i>
+                                        <p class="text-slate-400 font-medium">No events published yet.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-6 text-center text-slate-400 text-xs border-t border-slate-200 bg-white">
+            © 2026 BSM Alumni Association • Moderation Portal
+        </footer>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="eventModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full overflow-hidden animate-fade-up">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Create New Event</h2>
+                    <p class="text-slate-500 text-xs mt-0.5">Fill in the details to announce a new alumni gathering.</p>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-red-500 transition-all p-1.5 rounded-lg hover:bg-slate-100">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Title</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Date</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Location</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Status</th>
-                            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr th:each="event : ${events}" class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-slate-800" th:text="${event.title}">Event Title</div>
-                                <div class="text-xs text-slate-400 truncate w-48" th:text="${event.description}">Desc
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-slate-600">
-                                <span th:text="${#temporals.format(event.eventDate, 'dd MMM yyyy')}">Date</span>
-                            </td>
-                            <td class="px-6 py-4 text-sm text-slate-600" th:text="${event.location}">Location</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase"
-                                    th:classappend="${event.status == 'UPCOMING' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}"
-                                    th:text="${event.status}">Status</span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end gap-2">
-                                    <a href="#" class="p-2 text-slate-400 hover:text-amber-600" title="Edit">
-                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                    </a>
-                                    <a href="#" class="p-2 text-slate-400 hover:text-red-600" title="Delete">
-                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+            <form th:action="@{/admin/events/save}" method="post" enctype="multipart/form-data" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Event Title</label>
+                        <input type="text" name="title" required placeholder="e.g. Annual Alumni Homecoming 2026"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Event Date</label>
+                        <input type="datetime-local" name="eventDate" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Location</label>
+                        <input type="text" name="location" required placeholder="Auditorium / Zoom"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Event Banner (Picture)</label>
+                        <input type="file" name="imageFile" accept="image/*" required
+                            class="w-full px-4 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">Description</label>
+                        <textarea name="description" rows="3" required placeholder="Tell everyone what the event is about..."
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 outline-none transition-all text-sm"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                    <button type="button" onclick="closeModal()"
+                        class="px-5 py-2.5 rounded-xl font-bold text-xs text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all">Cancel</button>
+                    <button type="submit"
+                        class="px-6 py-2.5 rounded-xl font-bold text-xs text-white bg-[#1e3a5f] hover:bg-amber-500 hover:text-slate-900 transition-all shadow-md">
+                        Publish Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification th:if="${message}" -->
+    <div th:if="${message}" id="toast"
+        class="fixed bottom-8 right-8 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl z-[100] flex items-center gap-3 animate-bounce">
+        <i data-lucide="info" class="w-5 h-5 text-amber-400"></i>
+        <span class="text-sm font-bold" th:text="${message}">Action Successful!</span>
     </div>
 
     <script>
+        function openModal() {
+            document.getElementById('eventModal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('eventModal').classList.add('hidden');
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-visible');
+        }
+
+        // Auto-hide toast after 4 seconds
+        setTimeout(() => {
+            const toast = document.getElementById('toast');
+            if (toast) toast.style.display = 'none';
+        }, 4000);
+
         lucide.createIcons();
     </script>
 </body>
