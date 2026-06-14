@@ -7,13 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class FileUploadService {
 
-    private final String uploadRoot = "src/main/resources/static/images/uploads/";
+    @Value("${app.upload.dir}")
+    private String uploadRoot;
 
     public String uploadFile(MultipartFile file, String subDir) throws IOException {
         if (file == null || file.isEmpty()) {
