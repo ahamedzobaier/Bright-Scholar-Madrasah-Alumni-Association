@@ -20,4 +20,4 @@ ENV APP_UPLOAD_DIR=/app/uploads/
 ENV PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar"]
